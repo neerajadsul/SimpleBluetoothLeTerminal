@@ -244,9 +244,11 @@ public class DevicesFragment extends ListFragment {
         if(scanState == ScanState.NONE)
             return;
         if(listItems.indexOf(device) < 0) {
-            listItems.add(device);
-            Collections.sort(listItems, DevicesFragment::compareTo);
-            listAdapter.notifyDataSetChanged();
+            if ( device.getName()!=null && (device.getName().contains("RN4871") || device.getName().contains("TRFL"))) {
+                listItems.add(device);
+                Collections.sort(listItems, DevicesFragment::compareTo);
+                listAdapter.notifyDataSetChanged();
+            }
         }
     }
 

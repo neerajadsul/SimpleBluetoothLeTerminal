@@ -28,7 +28,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener {
+import com.github.mikephil.charting.charts.LineChart;
+
+public class TerminalFragment extends Fragment implements ServiceConnection, SerialListener, View.OnClickListener {
 
     private enum Connected { False, Pending, True }
 
@@ -44,6 +46,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private boolean hexEnabled = false;
     private boolean pendingNewline = false;
     private String newline = TextUtil.newline_crlf;
+
+    private LineChart lineChart;
 
     /*
      * Lifecycle
@@ -133,10 +137,30 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         sendText.addTextChangedListener(hexWatcher);
         sendText.setHint(hexEnabled ? "HEX mode" : "");
 
-        View sendBtn = view.findViewById(R.id.send_btn);
-        sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
+        lineChart = view.findViewById(R.id.lineChart);
+
+//        View sendBtn = view.findViewById(R.id.send_btn);
+//        sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
         return view;
     }
+
+
+    @Override
+    public void onClick(View v)
+    {
+        String sData = "";
+        switch (v.getId()){
+            case R.id.send_btn:
+                send(sendText.getText().toString());
+                break;
+            case R.id.btnAK:
+                send(cmdAK0000);
+                break;
+
+        }
+    }
+
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
@@ -273,5 +297,32 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         status("connection lost: " + e.getMessage());
         disconnect();
     }
+
+    //Get acknowledgement from the reader
+    String cmdAK0000  = "(AK0000)\r\n";
+    //Get reader's firmware version
+    String cmdFM0000  = "(FM0000)\r\n";
+    //Get fluorescent data from the reader
+    String cmdGF0770  = "(GF0770)\r\n";
+    //Get fluorescence factory calibration data
+    String cmdGFCL00  = "(GFCL00)\r\n";
+    //Get colourimetric Green LED data from the reader
+    String cmdGT211G  = "(GT211G)\r\n";
+    //Get colourimetric Red LED data from the reader
+    String cmdGT311R  = "(GT311R)\r\n";
+    //Get colourimetric Blue LED data from the reader
+    String cmdGT211B  = "(GT211B)\r\n";
+    //Get colourimetric factory calibration data for Green LED
+    String cmdGTCL0G  = "(GTCL0G)\r\n";
+    //Get colourimetric factory calibration data for Red LED
+    String cmdGTCL0R  = "(GTCL0R)\r\n";
+    //Get colourimetric factory calibration data for Blue LED
+    String cmdGTCL0B  = "(GTCL0B)\r\n";
+    //Get reader serial number
+    String cmdSN0000  = "(SN0000)\r\n";
+    //Get the tray status from the optics module
+    String cmdGY0000  = "(GY0000)\r\n";
+
+
 
 }
