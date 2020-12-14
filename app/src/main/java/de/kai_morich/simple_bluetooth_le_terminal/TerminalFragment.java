@@ -139,6 +139,17 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
 
         lineChart = view.findViewById(R.id.lineChart);
 
+
+        view.findViewById(R.id.send_btn).setOnClickListener(this);
+        view.findViewById(R.id.btnAK).setOnClickListener(this);
+        view.findViewById(R.id.btnGF0).setOnClickListener(this);
+        view.findViewById(R.id.btnGTG).setOnClickListener(this);
+        view.findViewById(R.id.btnGTR).setOnClickListener(this);
+        view.findViewById(R.id.btnGTB).setOnClickListener(this);
+        view.findViewById(R.id.btnFM0).setOnClickListener(this);
+        view.findViewById(R.id.btnGY0).setOnClickListener(this);
+        view.findViewById(R.id.btnCalG).setOnClickListener(this);
+
 //        View sendBtn = view.findViewById(R.id.send_btn);
 //        sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
         return view;
@@ -156,8 +167,29 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             case R.id.btnAK:
                 send(cmdAK0000);
                 break;
+            case R.id.btnGF0:
+                send(cmdGF0770);
+                break;
+            case R.id.btnGTG:
+                send(cmdGT211G);
+                break;
+            case R.id.btnGTR:
+                send(cmdGT311R);
+                break;
+            case R.id.btnGTB:
+                send(cmdGT211B);
+                break;
+            case R.id.btnFM0:
+                send(cmdFM0000);
+                break;
+            case R.id.btnGY0:
+                send(cmdGY0000);
+                break;
+            case R.id.btnCalG:
+                send(cmdGTCL0G);
+                break;
 
-        }
+            }
     }
 
 
