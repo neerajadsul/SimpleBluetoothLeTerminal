@@ -15,6 +15,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.method.ScrollingMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,6 +49,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     private String newline = TextUtil.newline_crlf;
 
     private LineChart lineChart;
+    String readlineBLE="";
 
     /*
      * Lifecycle
@@ -149,10 +151,16 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
         view.findViewById(R.id.btnFM0).setOnClickListener(this);
         view.findViewById(R.id.btnGY0).setOnClickListener(this);
         view.findViewById(R.id.btnCalG).setOnClickListener(this);
+        view.findViewById(R.id.btnTBUF).setOnClickListener(this);
+
 
 //        View sendBtn = view.findViewById(R.id.send_btn);
 //        sendBtn.setOnClickListener(v -> send(sendText.getText().toString()));
         return view;
+    }
+
+    private void UpdateGraphData(){
+
     }
 
 
@@ -187,6 +195,9 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 break;
             case R.id.btnCalG:
                 send(cmdGTCL0G);
+                break;
+            case R.id.btnTBUF:
+                send(cmdTE0000);
                 break;
 
             }
@@ -257,6 +268,7 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
             return;
         }
         try {
+//            readlineBLE = "";
             String msg;
             byte[] data;
             if(hexEnabled) {
@@ -295,6 +307,13 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
                 pendingNewline = msg.charAt(msg.length() - 1) == '\r';
             }
             receiveText.append(TextUtil.toCaretString(msg, newline.length() != 0));
+            if (!msg.endsWith("\n")){
+                readlineBLE += msg;
+            }else{
+                Log.d("readlineBLE length", String.valueOf(readlineBLE.split(",").length));
+                readlineBLE = "";
+            }
+            //Log.d("receive:",msg.toString());
         }
     }
 
@@ -354,7 +373,8 @@ public class TerminalFragment extends Fragment implements ServiceConnection, Ser
     String cmdSN0000  = "(SN0000)\r\n";
     //Get the tray status from the optics module
     String cmdGY0000  = "(GY0000)\r\n";
-
+    //Test the BLE module buffer effect
+    String cmdTE0000  = "(TE0000)\r\n";
 
 
 }
